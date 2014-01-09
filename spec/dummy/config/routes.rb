@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   mount BizWorkflowx::Engine => "/biz_workflowx"
   mount Commonx::Engine => "/commonx"
   mount Authentify::Engine => '/authentify'
+  mount StateMachineLogx::Engine => '/sm_log'
   
   resource :session
   

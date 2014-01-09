@@ -22,9 +22,9 @@ zh-CN:
   
   #biz_workflowx
   Successfully Saved! : '已保存！'
-  Successfully Updated! : '已更新！'
+  State Successfully Updated! : '审批已更新！'
   'Data Error. Not Saved!' : '数据错误。无法保存！'
-  'Data Error. Not Updated!' : '数据错误。无法更新！'
+  'Data Error. State Not Updated!' : '数据错误。审批无法更新！'
   Date                  : '日期'
   Edit                  : '编辑'
   Submit                : '保存'
@@ -43,4 +43,14 @@ zh-CN:
   Month : '月'
   Quarter : '季'
   Year : '年'
-
+  Comment : '简注'
+  Workflow History: '批审记录'
+  Submit : '递交'
+  Approve : '批准'
+  Reject : '否决'
+  Event Form : '审批表'
+  Quote : '报价'
+  Being Reviewed : '审批中'
+  Rejected : '否决'
+  Approved : '批准'
+  New : '待审'
