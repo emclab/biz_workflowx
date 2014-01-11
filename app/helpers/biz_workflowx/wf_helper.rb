@@ -49,21 +49,10 @@ module BizWorkflowx
     end
     
     def load_wf_action_def    
-      engine_name = params[:controller][/.+\//].sub('/','')
-      config_var_name = params[:controller][/\/.+/].sub('/','').singularize + 'wf_action_def' #quote_wf_action_def
+      engine_name = params[:controller][/.+\//].sub('/','')  #in_quotex
+      config_var_name = params[:controller][/\/.+/].sub('/','').singularize + '_wf_action_def' #quote_wf_action_def
       wf = Authentify::AuthentifyUtility.find_config_const(config_var_name, engine_name)
-      wf = "def submit
-      wf_common_action('new', 'being_reviewed', 'submit')
-    end
-    
-    def approve
-      wf_common_action('being_reviewed', 'approved', 'approve')
-    end
-    
-    def reject
-      wf_common_action('being_reviewed', 'rejected', 'reject')
-    end"
-      eval(wf) if wf.present?
+      eval(wf) if wf.present? 
     end
     
   end
