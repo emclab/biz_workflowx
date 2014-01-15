@@ -1,8 +1,8 @@
 <div id="main_body">
   <h4><%= @title %></h4>
   <%= simple_form_for @workflow_model_object,  :method => :put, :url =>  eval(@workflow_result_url)  do |f| %>
-      <%#= render inline: ERB.new(@erb_code).result(binding) %>
       <%= f.input :id_noupdate, :label => '#', :readonly => true, :input_html => {:value => @workflow_model_object.id} %>
+      <%= render inline: ERB.new(@erb_code).result(binding) if@erb_code.present? %>
       <%= f.input :wf_comment, :label => t('Comment'), :input_html => {:rows => 2} %>
       
       <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
