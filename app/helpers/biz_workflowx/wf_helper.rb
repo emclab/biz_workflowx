@@ -32,7 +32,7 @@ module BizWorkflowx
     protected
     
     def wf_common_action(from, to, event)
-      model_sym = params[:controller].camelize.singularize.demodulize.downcase.to_sym
+      model_sym = params[:controller][/\/.+/].sub('/', '').singularize.to_sym
       model_id = params[model_sym][:id_noupdate].to_i
       @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(model_id) 
       @workflow_model_object.last_updated_by_id = session[:user_id]
