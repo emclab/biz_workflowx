@@ -1,6 +1,6 @@
 module BizWorkflowx
   module WfHelper
-    include StateMachineLogx::StateMachineLogxHelper
+    #include StateMachineLogx::StateMachineLogxHelper
     def event_action
       @title = t('Event Form') + '-' + t(params[:controller][/\/.+/].sub('/', '').titleize.singularize)  #ex Event Form-Quote
       @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(params[:resource_id])  
