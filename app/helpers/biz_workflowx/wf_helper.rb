@@ -5,23 +5,12 @@ module BizWorkflowx
       @title = t('Event Form') + '-' + t(params[:controller][/\/.+/].sub('/', '').titleize.singularize)  #ex Event Form-Quote
       @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(params[:resource_id])  
       @workflow_result_url =   params[:wf_event].downcase + '_' + params[:controller][/\/.+/].sub('/', '').tableize.singularize + '_path'  #submit_quote_path
-      @erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event], params[:controller][/.+\//].sub('/', ''))
-      #ex, ('quote_submit', 'in_quotex')
+      @erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event] + '_inline', params[:controller][/.+\//].sub('/', ''))
+      #ex, ('quote_submit_inline', 'in_quotex')
     end
-
-    #wf_actions_def = find_config_const('wf_actions_def', params[:controller].camelize.deconstantize.titleize.singularize.downcase)   
-    # eval(wf_actions_def) if wf_actions_def.present? 
 =begin
     def submit
       wf_common_action('new', 'being_reviewed', 'submit')
-    end
-    
-    def approve
-      wf_common_action('being_reviewed', 'approved', 'approve')
-    end
-    
-    def reject
-      wf_common_action('being_reviewed', 'rejected', 'reject')
     end
 =end
     #before_filter load the wf action def
