@@ -5,7 +5,7 @@ module BizWorkflowx
     include Authentify::UsersHelper
     include Authentify::UserPrivilegeHelper
     include Commonx::CommonxHelper
-    include StateMachineLogx::StateMachineLogxHelper
+    #include StateMachineLogx::StateMachineLogxHelper
     
     before_filter :require_signin
     before_filter :max_pagination 
