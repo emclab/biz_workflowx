@@ -44,17 +44,17 @@ module BizWorkflowx
       eval(wf) if wf.present? 
     end
     
-    def return_open_process(model, num_of_final_state)
+    def return_open_process(model, final_state_string)  #string like: 'approved, stamped'
       num_days = find_config_const('wf_list_open_process_in_day').to_i
       state_array = params[:controller].camelize.singularize.constantize.workflow_spec.state_names
       open_state, all_state = [], []
       state_array.each do |s|
         all_state << s.to_s
       end
-      open_state = all_state
-      for i in 1..num_of_final_state
-        open_state = open_state - [all_state[-i]]
-      end
+      open_state = all_state - final_state_string.split(',').map(&:strip) #ex, ['initial_state', 'reviewing']
+      #for i in 1..num_of_final_state
+      #  open_state = open_state - [all_state[-i]]
+      #end
       model.where(params[:controller].sub('/', '_').to_sym => {:wf_state => open_state}).where("#{params[:controller].sub('/', '_')}.created_at >= ?", num_days.days.ago)
     end
     
