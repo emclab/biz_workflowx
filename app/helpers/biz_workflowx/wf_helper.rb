@@ -7,11 +7,7 @@ module BizWorkflowx
       @erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event] + '_inline', params[:controller][/.+\//].sub('/', ''))
       #ex, ('quote_submit_inline', 'in_quotex')
     end
-=begin
-    def submit
-      wf_common_action('new', 'being_reviewed', 'submit')
-    end
-=end
+
     #before_filter load the wf action def
     def self.included(base)
       base.before_filter :load_wf_action_def
@@ -20,17 +16,22 @@ module BizWorkflowx
     protected
     
     def wf_common_action(from, to, event)
-      model_sym = params[:controller][/\/.+/].sub('/', '').singularize.to_sym
+      model_sym = params[:controller][/\/.+/].sub('/', '').singularize.to_sym  #ex, :project out of 'projectx/projects'
       model_id = params[model_sym][:id_noupdate].to_i
       @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(model_id) 
       @workflow_model_object.last_updated_by_id = session[:user_id]
+      @workflow_model_object.wf_event = event  #pass the event into model. Need to define accessor wf_event in model. 
       @workflow_model_object.transaction do
         if @workflow_model_object.update_attributes(params[model_sym], :as => :role_update)
           @workflow_model_object.send(event.strip + '!')
           StateMachineLogx::StateMachineLogxHelper.state_machine_logger(params[model_sym][:id_noupdate], params[:controller], session[:user_name], params[model_sym][:wf_comment], from, to, event, session[:user_id])
           redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=State Successfully Updated!")
         else
+          params[:resource_id] = params[model_sym][:id_noupdate].to_i
+          params[:wf_event] = params[:action]
+          @erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event] + '_inline', params[:controller][/.+\//].sub('/', ''))
           @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(params[model_sym][:id_noupdate])
+          @workflow_result_url =   params[:wf_event].downcase + '_' + params[:controller][/\/.+/].sub('/', '').tableize.singularize + '_path'
           flash.now[:error] = t('Data Error. State Not Saved!')
           render 'event_action'
         end

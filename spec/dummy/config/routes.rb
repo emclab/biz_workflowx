@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  get "user_menus/index"
-
   mount BizWorkflowx::Engine => "/biz_workflowx"
   mount Commonx::Engine => "/commonx"
   mount Authentify::Engine => '/authentify'
