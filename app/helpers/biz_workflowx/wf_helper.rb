@@ -8,9 +8,9 @@ module BizWorkflowx
       #ex, ('quote_submit_inline', 'in_quotex')
     end
 
-    #before_filter load the wf action def
+    #before_action load the wf action def
     def self.included(base)
-      base.before_filter :load_wf_action_def
+      base.before_action :load_wf_action_def
     end
         
     protected
