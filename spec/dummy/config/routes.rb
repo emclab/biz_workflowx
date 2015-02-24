@@ -7,9 +7,9 @@ Rails.application.routes.draw do
   
   #resource :session
   
-  root :to => "sessions#new", controller: :authentify
-  match '/signin',  :to => 'sessions#new', controller: :authentify
-  match '/signout', :to => 'sessions#destroy', controller: :authentify
-  match '/user_menus', :to => 'user_menus#index', controller: :main_app
-  match '/view_handler', :to => 'application#view_handler', controller: :authentify
+  root :to => "authentify/sessions#new"
+  match '/signin',  :to => 'authentify/sessions#new'
+  match '/signout', :to => 'authentify/sessions#destroy'
+  match '/user_menus', :to => 'user_menus#index'
+  match '/view_handler', :to => 'authentify/application#view_handler'
 end
