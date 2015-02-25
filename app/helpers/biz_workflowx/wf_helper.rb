@@ -4,8 +4,9 @@ module BizWorkflowx
       @title = t('Event Form') + '-' + t(params[:controller][/\/.+/].sub('/', '').titleize.singularize)  #ex Event Form-Quote
       @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(params[:resource_id])  
       @workflow_result_url =   params[:wf_event].downcase + '_' + params[:controller][/\/.+/].sub('/', '').tableize.singularize + '_path'  #submit_quote_path
-      @erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event] + '_inline', params[:controller][/.+\//].sub('/', ''))
+      @inline_erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event] + '_inline', params[:controller][/.+\//].sub('/', ''))
       #ex, ('quote_submit_inline', 'in_quotex')
+      @erb_code = find_config_const('event_action_view', 'biz_workflowx')
     end
 
     #before_action load the wf action def
@@ -29,7 +30,7 @@ module BizWorkflowx
         else
           params[:resource_id] = params[model_sym][:id_noupdate].to_i
           params[:wf_event] = params[:action]
-          @erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event] + '_inline', params[:controller][/.+\//].sub('/', ''))
+          @inline_erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event] + '_inline', params[:controller][/.+\//].sub('/', ''))
           @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(params[model_sym][:id_noupdate])
           @workflow_result_url =   params[:wf_event].downcase + '_' + params[:controller][/\/.+/].sub('/', '').tableize.singularize + '_path'
           flash.now[:error] = t('Data Error. State Not Saved!')
