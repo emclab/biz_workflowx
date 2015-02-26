@@ -4,7 +4,7 @@
 <% else %>
 
   <h4><%= @title %></h4>
-  <%= simple_form_for @workflow_model_object,  :method => :put, :url =>  eval(@workflow_result_url)  do |f| %>
+  <%= simple_form_for @workflow_model_object,  :method => :patch, :url =>  eval(@workflow_result_url)  do |f| %>
       <%= f.input :id_noupdate, :label => '#', :readonly => true, :input_html => {:value => @workflow_model_object.id} %>
       <%= render inline: ERB.new(@inline_erb_code).result(binding) if @inline_erb_code.present? %>
       <%= f.input :wf_comment, :label => t('Comment'), :input_html => {:rows => 2} %>
