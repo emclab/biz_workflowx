@@ -1,5 +1,11 @@
 module BizWorkflowx
   module WfHelper
+    extend ActiveSupport::Concern
+    #before_action load the wf action def
+    included do
+      before_action :load_wf_action_def
+    end
+    
     def event_action
       @title = t('Event Form') + '-' + t(params[:controller][/\/.+/].sub('/', '').titleize.singularize)  #ex Event Form-Quote
       @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(params[:resource_id])  
@@ -9,11 +15,7 @@ module BizWorkflowx
       @erb_code = find_config_const('event_action_view', 'biz_workflowx')
     end
 
-    #before_action load the wf action def
-    def self.included(base)
-      base.before_action :load_wf_action_def
-    end
-        
+    
     protected
     
     def wf_common_action(from, to, event)
@@ -43,8 +45,8 @@ module BizWorkflowx
       engine_name = params[:controller][/.+\//].sub('/','')  #in_quotex
       config_var_name = params[:controller][/\/.+/].sub('/','').singularize + '_wf_action_def' #quote_wf_action_def
       wf = Authentify::AuthentifyUtility.find_config_const(config_var_name, engine_name)
-      eval(wf) if wf.present? 
-    end
+      instance_eval(wf) if wf.present? 
+    end 
     
     def return_open_process(model, final_state_string)  #string like: 'approved, stamped'
       num_days = find_config_const('wf_list_open_process_in_day').to_i
