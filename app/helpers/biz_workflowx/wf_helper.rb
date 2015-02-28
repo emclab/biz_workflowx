@@ -45,7 +45,9 @@ module BizWorkflowx
       engine_name = params[:controller][/.+\//].sub('/','')  #in_quotex
       config_var_name = params[:controller][/\/.+/].sub('/','').singularize + '_wf_action_def' #quote_wf_action_def
       wf = Authentify::AuthentifyUtility.find_config_const(config_var_name, engine_name)
-      instance_eval(wf) if wf.present? 
+      eval(wf) if wf.present? 
+      #load the action into Controller.action_methods if not done yet
+      wf.split("\n").each {|s| action_methods.add(s.sub('def ', '').strip) if s.include?('def ') && !action_methods.to_a.include?(s.sub('def ', '').strip)} if wf.present?  
     end 
     
     def return_open_process(model, final_state_string)  #string like: 'approved, stamped'
