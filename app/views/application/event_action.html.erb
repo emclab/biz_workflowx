@@ -2,17 +2,37 @@
   <%= render inline: @erb_code %>
   
 <% else %>
-
-  <h4><%= @title %></h4>
-  <%= simple_form_for @workflow_model_object,  :method => :patch, :url =>  eval(@workflow_result_url)  do |f| %>
+<div class="container">
+  <div class="page-header clearfix">
+    <div class="pull-left">
+    <h2><%=@title%></h2>
+    </div>
+  </div>
+  
+  <%= simple_form_for @workflow_model_object,  :method => :patch, :url =>  eval(@workflow_result_url), html: { class: 'form-horizontal col-sm-' + BUTTONS_CLS['form-span#'] },
+    wrapper: :horizontal_form,
+    wrapper_mappings: {
+    check_boxes: :horizontal_radio_and_checkboxes,
+    radio_buttons: :horizontal_radio_and_checkboxes,
+    file: :horizontal_file_input,
+    boolean: :horizontal_boolean
+  } do |f| %>
+  
+    <div class="form-inputs">
+      	
       <%= f.input :id_noupdate, :label => '#', :readonly => true, :input_html => {:value => @workflow_model_object.id} %>
       <%= render inline: ERB.new(@inline_erb_code).result(binding) if @inline_erb_code.present? %>
       <%= f.input :wf_comment, :label => t('Comment'), :input_html => {:rows => 2} %>
       
-      <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
-      &nbsp;&nbsp;&nbsp;&nbsp;
-	  <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %> 
+      <div class="btn-toolbar" >
+        <%= link_to t('Back'), SUBURI + "/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
+	    <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %> 
+	  </div> 
+
+    </div>
   <% end %>
+  
+</div>
 
 <% end %>
 
