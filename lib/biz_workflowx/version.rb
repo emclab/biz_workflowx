@@ -1,3 +1,3 @@
 module BizWorkflowx
-  VERSION = "01"
+  VERSION = "02"
 end
