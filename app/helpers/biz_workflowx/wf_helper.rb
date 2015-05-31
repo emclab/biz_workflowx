@@ -28,7 +28,7 @@ module BizWorkflowx
         if @workflow_model_object.update_attributes(params[model_sym], :as => :role_update)
           @workflow_model_object.send(event.strip + '!')
           StateMachineLogx::StateMachineLogxHelper.state_machine_logger(params[model_sym][:id_noupdate], params[:controller], session[:user_name], params[model_sym][:wf_comment], from, to, event, session[:user_id])
-          redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=State Successfully Updated!")
+          redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=State Successfully Updated!")
         else
           params[:resource_id] = params[model_sym][:id_noupdate].to_i
           params[:wf_event] = params[:action]
