@@ -25,7 +25,7 @@ module BizWorkflowx
       @workflow_model_object.last_updated_by_id = session[:user_id]
       @workflow_model_object.wf_event = event  #pass the event into model. Need to define accessor wf_event in model. 
       @workflow_model_object.transaction do
-        if @workflow_model_object.update_attributes(params[model_sym], :as => :role_update)
+        if @workflow_model_object.update_attributes(edit_params) #[model_sym], :as => :role_update)
           @workflow_model_object.send(event.strip + '!')
           StateMachineLogx::StateMachineLogxHelper.state_machine_logger(params[model_sym][:id_noupdate], params[:controller], session[:user_name], params[model_sym][:wf_comment], from, to, event, session[:user_id])
           redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=State Successfully Updated!")
