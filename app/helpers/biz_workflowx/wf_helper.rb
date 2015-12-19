@@ -23,20 +23,25 @@ module BizWorkflowx
       model_id = params[model_sym][:id_noupdate].to_i
       @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(model_id) 
       @workflow_model_object.last_updated_by_id = session[:user_id]
-      @workflow_model_object.wf_event = event  #pass the event into model. Need to define accessor wf_event in model. 
-      @workflow_model_object.transaction do
-        if @workflow_model_object.update_attributes(edit_params) #[model_sym], :as => :role_update)
-          @workflow_model_object.send(event.strip + '!')
-          StateMachineLogx::StateMachineLogxHelper.state_machine_logger(params[model_sym][:id_noupdate], params[:controller], session[:user_name], params[model_sym][:wf_comment], from, to, event, session[:user_id])
-          redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=State Successfully Updated!")
-        else
-          params[:resource_id] = params[model_sym][:id_noupdate].to_i
-          params[:wf_event] = params[:action]
-          @inline_erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event] + '_inline', params[:controller][/.+\//].sub('/', ''))
-          @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(params[model_sym][:id_noupdate])
-          @workflow_result_url =   params[:wf_event].downcase + '_' + params[:controller][/\/.+/].sub('/', '').tableize.singularize + '_path'
-          flash.now[:error] = t('Data Error. State Not Saved!')
-          render 'event_action'
+      @workflow_model_object.wf_event = event  #pass the event into model. Need to define accessor wf_event in model.
+      if event == 'make_wf_note' && to.blank?  #make note for the workflow
+        StateMachineLogx::StateMachineLogxHelper.state_machine_logger(params[model_sym][:id_noupdate], params[:controller], session[:user_name], params[model_sym][:wf_comment], '', '', event, session[:user_id])
+        redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=Successfully Noted!")
+      else 
+        @workflow_model_object.transaction do
+          if @workflow_model_object.update_attributes(edit_params) #[model_sym], :as => :role_update)
+            @workflow_model_object.send(event.strip + '!')
+            StateMachineLogx::StateMachineLogxHelper.state_machine_logger(params[model_sym][:id_noupdate], params[:controller], session[:user_name], params[model_sym][:wf_comment], from, to, event, session[:user_id])
+            redirect_to URI.escape(SUBURI + "/view_handler?index=0&msg=State Successfully Updated!")
+          else
+            params[:resource_id] = params[model_sym][:id_noupdate].to_i
+            params[:wf_event] = params[:action]
+            @inline_erb_code = find_config_const(params[:controller][/\/.+/].sub('/', '').singularize+ '_' + params[:wf_event] + '_inline', params[:controller][/.+\//].sub('/', ''))
+            @workflow_model_object = params[:controller].camelize.singularize.constantize.find_by_id(params[model_sym][:id_noupdate])
+            @workflow_result_url =   params[:wf_event].downcase + '_' + params[:controller][/\/.+/].sub('/', '').tableize.singularize + '_path'
+            flash.now[:error] = t('Data Error. State Not Saved!')
+            render 'event_action'
+          end
         end
       end
     end
